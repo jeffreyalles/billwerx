@@ -1,0 +1,57 @@
+<?php
+
+# Define page access level:
+session_start();
+$page_access = 2;
+
+# Include session (security check):
+include("session_check.php");
+
+# Include session check and database connection:
+include("../inc/dbconfig.php");
+
+$get_company = mysql_query("SELECT * FROM company");
+$show_company = mysql_fetch_array($get_company);
+
+# Get client data:
+$client_id = $_GET['client_id'];
+$get_client_access_logs = mysql_query("SELECT * FROM client_access_logs WHERE client_id = '$client_id'");
+
+$total_records = mysql_num_rows($get_client_access_logs);
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><?php echo $show_company['company_name'] ?>- Client Access Logs</title>
+<link href="../billwerx.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Refresh" content="<?php echo $show_company['session_timeout'] ?>;URL=../timeout.php" />
+<script type="text/javascript" src="../scripts/form_assist.js"></script>
+</head>
+<body>
+<div id="smallwrap">
+  <div id="header">
+    <h1><img src="../images/icons/login.png" alt="Client Access Log" width="16" height="16" /> Client Access Logs:</h1>
+    <p>Found <?php echo $total_records ?> record(s).</p>
+  </div>
+  <div id="content">
+    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="client_files" id="client_files">
+      <table class="fulltable">
+        <tr>
+          <td class="tabletop">ip address / hostname:</td>
+          <td width="32%" class="tabletop">created:</td>
+        </tr>
+        <?php while($show_client_access_log = mysql_fetch_array($get_client_access_logs)) { ?>
+        <tr class="tablelist">
+          <td class="tablerowborder"><a href="javascript:copyText('<?php echo $show_client_access_log['ipv4_address'] ?>')"><?php echo $show_client_access_log['ipv4_address'] ?></a><br />
+            <span class="smalltext"><?php echo $show_client_access_log['hostname'] ?></span></td>
+          <td class="tablerowborder"><?php echo $show_client_access_log['created'] ?></td>
+        </tr>
+        <?php } ?>
+      </table>
+    </form>
+  </div>
+</div>
+</body>
+</html>

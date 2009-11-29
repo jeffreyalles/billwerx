@@ -1,0 +1,3 @@
+var geocoder;var map;function initialize(){geocoder=new google.maps.Geocoder();var latlng=new google.maps.LatLng(51.061303,-114.058256);var myOptions={zoom:14,center:latlng,mapTypeId:google.maps.MapTypeId.ROADMAP}
+map=new google.maps.Map(document.getElementById("map_canvas"),myOptions);}
+function codeAddress(){var address=document.getElementById("address").value;if(geocoder){geocoder.geocode({'address':address},function(results,status){if(status==google.maps.GeocoderStatus.OK){if(status!=google.maps.GeocoderStatus.ZERO_RESULTS){map.set_center(results[0].geometry.location);var marker=new google.maps.Marker({map:map,position:results[0].geometry.location});}else{alert("No results found");}}else{alert("Geocode was not successful for the following reason: "+status);}});}}
