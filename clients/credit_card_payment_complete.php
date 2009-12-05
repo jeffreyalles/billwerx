@@ -21,10 +21,10 @@ $show_company = mysql_fetch_array($get_company);
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/information.png" alt="Survey Complete" width="16" height="16" /> Payment Complete:</h1>
-    <p>Thank you for making an on-line payment.</p>
-    <p>For your security, all payments are manually processed. Accounts will reflect credit card payments within 24 hours.</p>
-  </div>
+    <h2>Payment Complete:</h2>
+    <h3>Thank you for making an on-line payment.</h3>
+    <p>For your security, all payments are manually reviewed for quality assurance prior to processing. Accounts will reflect credit card payments within 24 hours.</p>
+    </div>
   <div id="content">
     <form id="form1" name="form1" method="post" action="">
       <table class="fulltable">

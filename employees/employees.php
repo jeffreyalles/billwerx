@@ -4,14 +4,14 @@
 session_start();
 $page_access = 3;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 # Get company data:
 $get_company = mysql_query("SELECT * FROM company");
@@ -20,13 +20,13 @@ $show_company = mysql_fetch_array($get_company);
 # Setup pagination:
 # 2009/08/10 RC 5 Corrected undefined variable:
 if(isset($_GET['start'])) { $start = $_GET['start']; } else { $start = 0; };
-$previous_page = ($start - $show_company['records_per_page']);
-$next_page = ($start + $show_company['records_per_page']);
+$previous_page = ($start - $_SESSION['records_per_page']);
+$next_page = ($start + $_SESSION['records_per_page']);
 
 # Get invoice data:
 $get_total_employees = mysql_query("SELECT * FROM employees");
 $total_records = mysql_num_rows($get_total_employees);
-$get_employees = mysql_query("SELECT * FROM employees LIMIT $start, " . $show_company['records_per_page'] . "");
+$get_employees = mysql_query("SELECT * FROM employees LIMIT $start, " . $_SESSION['records_per_page'] . "");
 
 # Start search:
 if(isset($_GET['query'])) {
@@ -47,25 +47,27 @@ $next_page = $total_records;
 </head>
 <body>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/employees.png" alt="Employees" width="16" height="16" /> Employees:</h1>
-    <p>Found <?php echo $total_records ?> record(s).</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form id="employees" name="employees" method="get" action="<?php echo $_SERVER['PHP_SELF'] ?>">
       <table class="fulltable">
         <tr>
-          <td class="halftopcell"><h2>Search:</h2>
-            <table class="fulltable">
+          <td class="halftopcell"><h1><img src="../images/icons/employees.png" alt="Employees" width="16" height="16" /> Employees:</h1>
+          <table class="fulltable">
               <tr>
-                <td class="firstcell">for query:</td>
-                <td><input name="query" type="text" class="entrytext" id="query" /></td>
+                <td class="justred">Found <?php echo $total_records ?> record(s).</td>
               </tr>
               <tr>
-                <td class="firstcell">&nbsp;</td>
+                <td><input name="query" type="text" class="entrytext" id="query" onclick="this.value=''" value="search query" /></td>
+              </tr>
+              
+              <tr>
                 <td><input name="create" type="button" class="button" id="create" onclick="window.location='create_employee.php'" value="CREATE" /></td>
               </tr>
           </table></td>

@@ -4,15 +4,13 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# Include_once session (security check):
+include_once("session_check.php");
+include_once("../inc/dbconfig.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
-include("../inc/phpmailer/class.phpmailer.php");
-
-# Include security POST loop:
-include("../global/make_safe.php");
+# Include FPDF class:
+define('FPDF_FONTPATH','font/');
+require('../inc/fpdf/html_table.php');
 
 # Get company data:
 $get_company = mysql_query("SELECT * FROM company");
@@ -27,35 +25,11 @@ $invoice_id = $_GET['invoice_id'];
 $get_invoice = mysql_query("SELECT * FROM invoices WHERE invoice_id = '$invoice_id'");
 $show_invoice = mysql_fetch_array($get_invoice);
 
-# Process form when $_POST data is found for the specified form:
-if(isset($_POST['billing_email_address'])) {
+# Get client data from invoice_id:
+$get_client = mysql_query("SELECT * FROM clients WHERE client_id = " . $show_invoice['client_id'] . "");
+$show_client = mysql_fetch_array($get_client);
 
-# Define billing e-mail address:
-$billing_email_address = $_POST['billing_email_address'];
-
-$invoice_id = $_POST['invoice_id'];
-$get_invoice = mysql_query("SELECT * FROM invoices WHERE invoice_id = '$invoice_id'");
-$show_invoice = mysql_fetch_array($get_invoice);
-
-# Include FPDF class:
-define('FPDF_FONTPATH','font/');
-require('../inc/fpdf/html_table.php');
-
-ob_start();
-include("../templates/invoice.php");
-$html = ob_get_contents();
-ob_end_clean();
-
-# Setup fpdf values:
-$pdf = new PDF('P', 'mm', 'Letter');
-$pdf->SetAuthor($show_company['company_name']);
-$pdf->SetMargins(2, 2, 2);
-$pdf->SetAutoPageBreak('false');
-$pdf->AddPage();
-$pdf->SetFont('Arial','',10);
-$pdf->WriteHTML($html);
-$pdf->Output();
-
+# Replace these:
 $search_values = array(
 "[client_first_name]",
 "[client_last_name]",
@@ -68,6 +42,7 @@ $search_values = array(
 "[invoice_due]",
 );
 
+# With these values:
 $replacement_values = array(
 $show_client['first_name'],
 $show_client['last_name'],
@@ -80,29 +55,48 @@ $show_invoice['notes'],
 $show_invoice['due'],
 );
 
+# Create body area in textarea to make on-the-fly changes:
+$body = str_replace($search_values, $replacement_values, $show_company_message['invoice_created']);
+
+# Process form when $_POST data is found for the specified form:
+if(isset($_POST['email'])) {
+
+# Define POST variables:
+$email = $_POST['email'];
+$subject = $_POST['subject'];
+$body = $_POST['body'];
+
+$invoice_id = $_POST['invoice_id'];
+
 # Setup PHPMailer values:
+require("../inc/phpmailer/class.phpmailer.php");
 $mail = new PHPMailer();
-$mail->IsSMTP();
-$mail->CharSet = 'UTF-8';
+
 $mail->From = $show_company['email_address'];
 $mail->FromName = $show_company['company_name'];
-$mail->AddAddress($billing_email_address);
-$mail->addBCC($show_company['email_address'], $show_company['company_name']); 
-$mail->Subject = "Invoice Created: Invoice #: $invoice_id - " . $show_invoice['purpose'];
-$mail->Body = str_replace($search_values, $replacement_values, $show_company_message['invoice_created']);
-$attachment = $pdf->Output('', 'S');
-$mail->AddStringAttachment($attachment, 'Invoice_' . $invoice_id . '.pdf', 'base64', 'application/pdf');
+$mail->AddAddress($email);
+$mail->addBCC($show_company['email_address']); 
+
+$mail->Subject = $subject;
+$mail->Body = $body;
+
+# Get invoice attachment:
+include_once("../global/generate_invoice.php");
+
+$invoice_attachment = $pdf->Output('', 'S');
+$mail->AddStringAttachment($invoice_attachment, 'invoice_' . $invoice_id . '.pdf');
 
 # Send email(s) and report errors if any:
 if(!$mail->Send()) {
 echo $mail->ErrorInfo; exit;
-}
+};
 
-# Assign values to a database table:
+# Update invoice table to reflect date and time sent:
 $doSQL = "UPDATE invoices SET date_sent = NOW() WHERE invoice_id = '$invoice_id'";
-
 mysql_query($doSQL) or die(mysql_error());
 
+# Return to screen:
+header("Location: email_sent.php");
 }
 
 ?>
@@ -111,25 +105,35 @@ mysql_query($doSQL) or die(mysql_error());
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Refresh" content="<?php echo $show_company['session_timeout'] ?>;URL=../timeout.php" />
-<title><?php echo $show_company['company_name'] ?> - E-mail Invoice</title>
+<title><?php echo $show_company['company_name'] ?>- E-mail Invoice</title>
 <link href="../billwerx.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../scripts/form_assist.js"></script>
 </head>
-<body onload="document.getElementById('billing_email_address').focus()" onunload="window.opener.location.reload();window.close()">
+<body onunload="window.opener.location.reload()">
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/email.png" alt="E-mail Invoice" width="16" height="16" /> E-mail Invoice:</h1>
+    <h2>E-mail Invoice:</h2>
+    <h3>A copy of the invoice (as a PDF) will be attached to this e-mail.</h3>
   </div>
   <div id="content">
-    <form id="E-mail" name="E-mail" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+    <form id="email" name="email" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
       <table class="fulltable">
         <tr>
-          <td class="firstcell">billing e-mail address:</td>
-          <td><input name="billing_email_address" type="text" class="entrytext" id="billing_email_address" value="<?php echo $show_invoice['billing_email_address'] ?>" /></td>
+          <td class="firstcell">e-mail address:</td>
+          <td colspan="2"><input name="email" type="text" class="entrytext" id="email" value="<?php echo $show_invoice['billing_email_address'] ?>" /></td>
         </tr>
         <tr>
-          <td class="firstcell">&nbsp;</td>
-          <td><input name="email" type="submit" class="button" id="email" value="E-MAIL" />
+          <td class="firstcell">subject:</td>
+          <td><input name="subject" type="text" class="entrytext" id="subject" value="Invoice #: <?php echo $show_invoice['invoice_id'] ?> - <?php echo $show_invoice['purpose'] ?>" /></td>
+          <td class="lastcell"><a href="../global/print_invoice.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>"><img src="../images/icons/email_attach.png" alt="View Attachment" width="16" height="16" class="iconspacer" /></a></td>
+        </tr>
+      </table>
+      <h2>Message / Body:</h2>
+      <textarea name="body" class="entrybox" id="body"><?php echo $body ?>
+          </textarea>
+      <table class="fulltable">
+        <tr>
+          <td><input name="send" type="submit" class="button" id="send" value="SEND" />
             <input name="invoice_id" type="hidden" id="invoice_id" value="<?php echo $show_invoice['invoice_id'] ?>" /></td>
         </tr>
       </table>

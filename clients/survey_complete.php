@@ -21,7 +21,8 @@ $show_company = mysql_fetch_array($get_company);
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/information.png" alt="Survey Complete" width="16" height="16" /> Survey Complete:</h1>
+    <h2>Survey Complete:</h2>
+    <h3>We have successfully received the results of your survey.</h3>
     <p>The information you provided is used to ensure we maintain a high quality of service and have met your expectations.</p>
     <p>We thank you for taking the time to share your thoughts - if required a member of management may contact you.</p>
   </div>

@@ -1,0 +1,1 @@
+Welcome, <?php echo $_SESSION['client_first_name'] ?> <?php echo $_SESSION['client_last_name'] ?> | <a href="profile.php">My Profile</a> | <a href="../logout.php">Logout</a>

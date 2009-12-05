@@ -4,11 +4,11 @@
 session_start();
 $page_access = 2;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -69,8 +69,8 @@ header("Location: client_files.php?client_id=$client_id");
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/files.png" alt="Client Files" width="16" height="16" /> Client Files:</h1>
-    <p>Found <?php echo $total_records ?> record(s).</p>
+    <h2>Client Files:</h2>
+    <h3>Found <?php echo $total_records ?> record(s).</h3>
   </div>
   <div id="content">
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="client_files" id="client_files">

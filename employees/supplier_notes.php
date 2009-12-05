@@ -4,14 +4,14 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -57,12 +57,12 @@ header("Location: supplier_notes.php?supplier_id=$supplier_id");
 </head>
 <body>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/note.png" alt="Supplier Notes" width="16" height="16" /> Supplier Notes:</h1>
-    <p>Found <?php echo $total_records ?> record(s).</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form id="update_client" name="update_client" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">

@@ -4,14 +4,14 @@
 session_start();
 $page_access = 2;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -100,11 +100,11 @@ header("Location: e-mail_payment_received.php?payment_id=$payment_id");
 <link href="../billwerx.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../scripts/form_assist.js"></script>
 </head>
-<body onload="document.getElementById('amount').focus()" onunload="window.opener.location.reload();window.close()">
+<body onunload="window.opener.location.reload();window.close()">
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/payments.png" alt="Create Payment" width="16" height="16" /> Update Payment:</h1>
-    <p>Record created by: <a href="mailto:<?php echo $show_employee['email_address'] ?>?subject=Payment: <?php echo $show_payment['payment_id'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a>.</p>
+    <h2>Update Payment:</h2>
+    <h3>Record created by: <a href="mailto:<?php echo $show_employee['email_address'] ?>?subject=Payment: <?php echo $show_payment['payment_id'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a>.</h3>
   </div>
   <div id="content">
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="create_payment" id="create_payment">
@@ -119,7 +119,7 @@ header("Location: e-mail_payment_received.php?payment_id=$payment_id");
         </tr>
         <tr>
           <td class="firstcell">attachment:<br />
-            <a href="../global/download_payment_file.php?payment_id=<?php echo $show_payment['payment_id'] ?>">download current</a></td>
+            <a href="download_payment_file.php?payment_id=<?php echo $show_payment['payment_id'] ?>">download current</a></td>
           <td><input name="file" type="file" class="entrytext" id="file" /></td>
         </tr>
         <tr>

@@ -2,10 +2,13 @@
 
 # Include session check and database connection:
 include("inc/dbconfig.php");
-include("inc/phpmailer/class.phpmailer.php");
-
-# Include security POST loop:
 include("global/make_safe.php");
+
+$get_company = mysql_query("SELECT * FROM company");
+$show_company = mysql_fetch_array($get_company);
+
+$get_company_messages = mysql_query("SELECT * FROM company_messages");
+$show_company_message = mysql_fetch_array($get_company_messages);
 
 # Process form when $_POST data is found for the specified form:
 if((isset($_POST['send'])) and (!empty($_POST['email_address']))) {
@@ -16,13 +19,6 @@ $email_address = $_POST['email_address'];
 // Query the client database table:
 $get_clients = mysql_query("SELECT * FROM clients WHERE email_address = '$email_address' OR billing_email_address = '$email_address'");
 $show_client = mysql_fetch_array($get_clients);
-
-$get_company = mysql_query("SELECT * FROM company");
-$show_company = mysql_fetch_array($get_company);
-
-# Setup query to obtain encrypted credit cards:
-$get_company_messages = mysql_query("SELECT * FROM company_messages");
-$show_company_message = mysql_fetch_array($get_company_messages);
 
 $search_values = array(
 "[client_first_name]",
@@ -41,18 +37,25 @@ $show_client['billing_email_address'],
 );
 
 # Setup PHPMailer values:
+require("inc/phpmailer/class.phpmailer.php");
 $mail = new PHPMailer();
+
 $mail->From = $show_company['email_address'];
 $mail->FromName = $show_company['company_name'];
-$mail->AddAddress($show_client['email_address'],$show_client['first_name'] . " " . $show_client['last_name']);
-$mail->addCC($show_client['billing_email_address']);
-$mail->addBCC($show_company['email_address'], $show_company['company_name']); 
+$mail->AddAddress($show_client['email_address']);
+$mail->addCC($show_client['billing_email_address']); 
+$mail->addBCC($show_company['email_address']); 
+
 $mail->Subject = "Forgot Password Request";
 $mail->Body = str_replace($search_values, $replacement_values, $show_company_message['forgot_password']);
-$mail->Send();
+
+# Send email(s) and report errors if any:
+if(!$mail->Send()) {
+echo $mail->ErrorInfo; exit;
+};
 
 # Return to screen:
-header("Location: index.php");
+header("Location: forgot_password_complete.php");
 
 };
 
@@ -67,8 +70,8 @@ header("Location: index.php");
 <body onload="document.getElementById('email_address').focus()">
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="images/icons/forgot_password.png" alt="Forgot Password" width="16" height="16" /> Forgot Password:</h1>
-    <p>Enter the e-mail address associated with your account.</p>
+    <h2>Forgot Password:</h2>
+    <h3>Enter the e-mail address associated with your account.</h3>
   </div>
   <div id="content">
     <form id="form1" name="form1" method="post" action="">

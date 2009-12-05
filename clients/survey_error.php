@@ -21,7 +21,8 @@ $show_company = mysql_fetch_array($get_company);
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/unauthorized.png" alt="Survey Error" width="16" height="16" /> Survey Error:</h1>
+    <h2>Survey Error:</h2>
+    <h3>You cannot complete a survey at this time.</h3>
     <p>Our records indicate you have either provided feedback for this invoice at a prior date, or your browser may not have provided the correct security variables.</p>
   </div>
   <div id="content">

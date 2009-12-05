@@ -4,14 +4,14 @@
 session_start();
 $page_access = 2;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -27,6 +27,8 @@ $work_number = $_POST['work_number'];
 $mobile_number = $_POST['mobile_number'];
 $fax_number = $_POST['fax_number'];
 $email_address = strtolower($_POST['email_address']);
+
+$website = strtolower($_POST['website']);
 
 $billing_address = $_POST['billing_address'];
 $billing_city = $_POST['billing_city'];
@@ -44,7 +46,7 @@ $shipping_country = $_POST['shipping_country'];
 $employee_id = $_SESSION['employee_id'];
 
 # Make MySQL statement:
-$doSQL = "INSERT INTO suppliers (first_name, last_name, company_name, home_number, work_number, mobile_number, fax_number, email_address, billing_address, billing_city, billing_province, billing_postal, billing_country, shipping_address, shipping_city, shipping_province, shipping_postal, shipping_country, employee_id) VALUES ('$first_name', '$last_name', '$company_name', '$home_number', '$work_number', '$mobile_number', '$fax_number', '$email_address', '$billing_address', '$billing_city', '$billing_province', '$billing_postal', '$billing_country', '$shipping_address', '$shipping_city', '$shipping_province', '$shipping_postal', '$shipping_country', '$employee_id')";
+$doSQL = "INSERT INTO suppliers (first_name, last_name, company_name, home_number, work_number, mobile_number, fax_number, email_address, website, billing_address, billing_city, billing_province, billing_postal, billing_country, shipping_address, shipping_city, shipping_province, shipping_postal, shipping_country, employee_id) VALUES ('$first_name', '$last_name', '$company_name', '$home_number', '$work_number', '$mobile_number', '$fax_number', '$email_address', '$website', '$billing_address', '$billing_city', '$billing_province', '$billing_postal', '$billing_country', '$shipping_address', '$shipping_city', '$shipping_province', '$shipping_postal', '$shipping_country', '$employee_id')";
 
 # Perform SQL command, show error (if any):
 mysql_query($doSQL) or die(mysql_error());
@@ -69,12 +71,12 @@ header("Location: update_supplier.php?supplier_id=$supplier_id");
 </head>
 <body>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/suppliers.png" alt="Create Supplier" width="16" height="16" /> Create Supplier:</h1>
-    <p>Welcome</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form id="create_client" name="create_client" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
@@ -115,7 +117,12 @@ header("Location: update_supplier.php?supplier_id=$supplier_id");
                 <td><input name="email_address" type="text" class="entrytext" id="email_address" /></td>
               </tr>
             </table>
-            </td>
+            <table class="fulltable">
+              <tr>
+                <td class="firstcell">website:</td>
+                <td><input name="website" type="text" class="entrytext" id="website" /></td>
+              </tr>
+            </table></td>
           <td class="halftopcell"><h2>Billing: </h2>
             <table class="fulltable">
               <tr>

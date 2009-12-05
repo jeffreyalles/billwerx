@@ -4,11 +4,11 @@
 session_start();
 $page_access = 3;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -34,7 +34,7 @@ $doSQL = "UPDATE company SET logo_name = '$logo_name', logo_size = '$logo_size',
 mysql_query($doSQL) or die(mysql_error());
 
 # Return to screen:
-header("Location: update_company_logo.php");
+header("Location: company_logo.php");
 
 }
 
@@ -51,8 +51,9 @@ header("Location: update_company_logo.php");
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/logo.png" alt="Update Company Logo" width="16" height="16" /> Update Company Logo:</h1>
-    <p>You can update the company image used to create invoices.</p>
+    <h2>Company Logo:</h2>
+    <h3>You can update the company image used to create invoices.</h3>
+    <p>For best results on invoices, receipts, and Billwerx pages uploaded company logo's should be 180px by 50px and in JPEG or GIF format.</p>
   </div>
   <div id="content">
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="form1" id="form1">
@@ -64,7 +65,8 @@ header("Location: update_company_logo.php");
         </tr>
         <tr>
           <td class="firstcell">&nbsp;</td>
-          <td><input name="update" type="submit" class="button" id="update" value="UPDATE" /></td>
+          <td><input name="update" type="submit" class="button" id="update" value="UPDATE" />
+          <input name="close" type="button" class="button" id="close" onclick="window.close()" value="CLOSE" /></td>
         </tr>
       </table>
     </form>

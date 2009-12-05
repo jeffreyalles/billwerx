@@ -4,19 +4,21 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
 
 $get_payment_methods = mysql_query("SELECT * FROM payment_methods");
+
+$total_records = mysql_num_rows($get_payment_methods);
 
 # Process form when $_POST data is found for the specified form:
 if(isset($_POST['create'])) {
@@ -47,8 +49,8 @@ header("Location: update_payment_methods.php");
 <body onload="document.getElementById('name').focus()">
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/payments.png" alt="Update Payment Methods" /> Update Payment Methods:</h1>
-    <p>You must enter a valid e-mail address and password to login.</p>
+    <h2>Update Payment Methods:</h2>
+    <h3>Found <?php echo $total_records ?> record(s).</h3>
   </div>
   <div id="content">
     <form id="update_payment_methods" name="update_payment_methods" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">

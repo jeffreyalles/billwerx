@@ -4,15 +4,15 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
 # Get query:
 $query = $_GET['query'];
-$get_clients = mysql_query("SELECT * FROM clients WHERE (last_name LIKE '%$query%') OR (first_name LIKE '%$query%') OR (company_name LIKE '%$query%') LIMIT 4"); ?>
+$get_clients = mysql_query("SELECT * FROM clients WHERE active = 1 AND (last_name LIKE '%$query%') OR (first_name LIKE '%$query%') OR (company_name LIKE '%$query%') LIMIT 4"); ?>
 
 <ul>
   <?php while($show_client = mysql_fetch_array($get_clients)) { ?>

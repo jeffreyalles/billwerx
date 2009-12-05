@@ -8,8 +8,8 @@
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="images/icons/unauthorized.png" alt="Restricted" width="16" height="16" /> Missing License:</h1>
-    <p>Your Billwerx installation is either not configured correctly or the required license file cannot be found. Please ensure a valid license has been uploaded.</p>
+    <h2>Missing License:</h2>
+    <h3>The Billwerx license file cannot be found, please reinstall Billwerx.</h3>
   </div>
   <div id="content">
     <form id="form1" name="form1" method="post" action="">

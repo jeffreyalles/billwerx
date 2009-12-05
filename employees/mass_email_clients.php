@@ -4,61 +4,58 @@
 session_start();
 $page_access = 3;
 
-# Include session (security check):
-include("session_check.php");
-
-# Include security POST loop:
-include("../global/make_safe.php");
-
-# Include session check and database connection:
-include("../inc/dbconfig.php");
-include("../inc/phpmailer/class.phpmailer.php");
+# include_once session (security check):
+include_once("session_check.php");
+include_once("../inc/dbconfig.php");
+include_once("../global/make_safe.php");
 
 # Get company data:
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
 
-$get_company_messages = mysql_query("SELECT * FROM company_messages");
-$show_company_messages = mysql_fetch_array($get_company_messages);
+$get_campaigns = mysql_query("SELECT * FROM campaigns");
 
 # If the size of the file is greater than zero (0) process:
-if((isset($_POST['email'])) AND (($_FILES['file']['size'] > 0))) {
+if((isset($_POST['send'])) AND (($_FILES['html_body']['size'] > 0))) {
 
-# Get company data:
-$get_company = mysql_query("SELECT * FROM company");
-$show_company = mysql_fetch_array($get_company);
-
-# Define POST file variables:
-$temp_name  = $_FILES['file']['tmp_name'];
-
-# Define message subject:
+# Define POST variables:
+$campaign_id = $_POST['campaign_id'];
 $subject = $_POST['subject'];
 
-# Define message body:
-$readfile = fopen($temp_name, 'r');
-$content = fread($readfile, filesize($temp_name));
-fclose($readfile);
+# Define POST file variables:
+$html_body  = $_FILES['html_body']['tmp_name'];
+$read_html_body = fopen($html_body, 'r');
+$html_body_content = fread($read_html_body, filesize($html_body));
+fclose($read_html_body);
 
-# Get clients:
-$get_clients = mysql_query("SELECT * FROM clients");
+# Obtain clients to e-mail:
+$get_clients = mysql_query("SELECT * FROM clients WHERE active = 1 AND email_address REGEXP '^[^@]+@[^@]+\.[^@]{2,}$' AND campaign_id = '$campaign_id'");
 while($show_client = mysql_fetch_array($get_clients)) {
 
 # Setup PHPMailer values:
+require("../inc/phpmailer/class.phpmailer.php");
 $mail = new PHPMailer();
+
 $mail->IsSMTP();
-$mail->IsHTML(true);
-$mail->CharSet = 'UTF-8';
 $mail->From = $show_company['email_address'];
 $mail->FromName = $show_company['company_name'];
-$mail->ConfirmReadingTo = $show_company['email_address'];
 $mail->AddAddress($show_client['email_address']);
-$mail->AddCC($show_client['billing_email_address']);
-$mail->Subject = $subject;
-$mail->Body = $content;
-$mail->Send();
+$mail->WordWrap = 50;
+$mail->IsHTML(true);
 
-// Stop the query:
-}; }
+$mail->Subject = $subject;
+$mail->Body = $html_body_content;
+
+# Send email(s) and report errors if any:
+if(!$mail->Send()) {
+echo $mail->ErrorInfo;
+};
+
+};
+
+# Return to screen:
+header("Location: email_sent.php");
+};
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -66,30 +63,39 @@ $mail->Send();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Refresh" content="<?php echo $show_company['session_timeout'] ?>;URL=../timeout.php" />
-<title><?php echo $show_company['company_name'] ?> - Mass E-mail Clients</title>
+<title><?php echo $show_company['company_name'] ?>- Mass E-mail Clients</title>
 <link href="../billwerx.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../scripts/form_assist.js"></script>
 </head>
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/email.png" alt="Mass E-mail Clients" width="16" height="16" /> Mass E-mail Clients:</h1>
-    <p>You can sent a composed e-mail to all clients by using this form.</p>
+    <h2>Mass E-mail Clients:</h2>
+    <h3>Select the campaign, subject, body, and attachment (if any).</h3>
   </div>
   <div id="content">
-    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="form1" id="form1">
+    <form action="" method="post" enctype="multipart/form-data" name="email" id="email">
       <table class="fulltable">
+        <tr>
+          <td class="firstcell">campaign:</td>
+          <td><select name="campaign_id" class="entrytext" id="campaign_id">
+              <?php while($show_campaign = mysql_fetch_array($get_campaigns)) { ?>
+              <option value="<?php echo $show_campaign['campaign_id'] ?>"><?php echo $show_campaign['name'] ?></option>
+              <?php } ?>
+            </select></td>
+        </tr>
         <tr>
           <td class="firstcell">subject:</td>
           <td><input name="subject" type="text" class="entrytext" id="subject" /></td>
         </tr>
         <tr>
-          <td class="firstcell">upload html file:</td>
-          <td><input name="file" type="file" class="entrytext" id="file" /></td>
+          <td class="firstcell">html body:</td>
+          <td><input name="html_body" type="file" class="entrytext" id="html_body" /></td>
         </tr>
+      </table>
+      <table class="fulltable">
         <tr>
-          <td class="firstcell">&nbsp;</td>
-          <td><input name="email" type="submit" class="button" id="email" value="E-MAIL" /></td>
+          <td><input name="send" type="submit" class="button" id="send" value="SEND" /></td>
         </tr>
       </table>
     </form>

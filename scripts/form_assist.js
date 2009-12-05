@@ -14,3 +14,6 @@ markup=Number(document.getElementById('markup').value)
 price=Number(cost+(cost*markup/100))
 document.getElementById('price').value=price}
 function cleanNumber(obj){obj.value=obj.value.replace(/[^0-9]+/g,'')};function formatNumber(obj){obj.value=obj.value.replace(/(\d{3})(\d{3})/,'('+'$1'+') '+'$2'+'-')};function copyText(content){window.clipboardData.setData('Text',content);}
+function randomString(){var chars="0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";var string_length=5;var randomstring='';for(var i=0;i<string_length;i++){var rnum=Math.floor(Math.random()*chars.length);randomstring+=chars.substring(rnum,rnum+1);}
+document.getElementById('account_password').value=randomstring;}
+function setHomePrimary(){document.getElementById('primary_number').value=document.getElementById('home_number').value;document.getElementById('primary_home').checked=true;};function setWorkPrimary(){document.getElementById('primary_number').value=document.getElementById('work_number').value;document.getElementById('primary_business').checked=true;};function setMobilePrimary(){document.getElementById('primary_number').value=document.getElementById('mobile_number').value;document.getElementById('primary_mobile').checked=true;};

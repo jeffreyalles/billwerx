@@ -4,13 +4,13 @@
 session_start();
 $page_access = 3;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-$get_invoices = mysql_query("SELECT invoice_id, date_created, purpose, purchase_order, tax1_percent, tax2_percent, tax1_total, tax2_total, total, received, due FROM invoices");
+$get_invoices = mysql_query("SELECT * FROM invoices");
 $columns = mysql_num_fields($get_invoices);
 
 # Get names for column:

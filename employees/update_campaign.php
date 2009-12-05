@@ -4,14 +4,14 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -55,8 +55,8 @@ header("Location: manage_campaigns.php");
 <body onload="document.getElementById('name').focus()">
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/expenses.png" alt="Update Expense Categories" width="16" height="16" /> Update Campaign:</h1>
-    <p>Record created <?php echo $show_campaign['created'] ?> by: <a href="mailto:<?php echo $show_employee['email_address'] ?>?subject=Campaign: <?php echo $show_campaign['name'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a>.</p>
+    <h2>Update Campaign:</h2>
+    <h3>Record created <?php echo $show_campaign['created'] ?> by: <a href="mailto:<?php echo $show_employee['email_address'] ?>?subject=Campaign: <?php echo $show_campaign['name'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a>.</h3>
   </div>
   <div id="content">
     <form id="update_campaigns" name="update_campaigns" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">

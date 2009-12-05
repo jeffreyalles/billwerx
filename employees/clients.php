@@ -4,14 +4,14 @@
 session_start();
 $page_access = 2;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 # Get company data:
 $get_company = mysql_query("SELECT * FROM company");
@@ -20,13 +20,13 @@ $show_company = mysql_fetch_array($get_company);
 # Setup pagination:
 # 2009/08/10 RC 5 Corrected undefined variable:
 if(isset($_GET['start'])) { $start = $_GET['start']; } else { $start = 0; };
-$previous_page = ($start - $show_company['records_per_page']);
-$next_page = ($start + $show_company['records_per_page']);
+$previous_page = ($start - $_SESSION['records_per_page']);
+$next_page = ($start + $_SESSION['records_per_page']);
 
 # Get invoice data:
 $get_total_clients = mysql_query("SELECT * FROM clients");
 $total_records = mysql_num_rows($get_total_clients);
-$get_clients = mysql_query("SELECT * FROM clients ORDER BY client_id DESC LIMIT $start, " . $show_company['records_per_page'] . "");
+$get_clients = mysql_query("SELECT * FROM clients ORDER BY client_id DESC LIMIT $start, " . $_SESSION['records_per_page'] . "");
 
 # Start search:
 if(isset($_GET['query'])) {
@@ -47,32 +47,35 @@ $next_page = $total_records;
 <script type="text/javascript" src="../scripts/form_assist.js"></script>
 <script type="text/javascript" src="../scripts/tooltip.js"></script>
 </head>
-<body onload="document.getElementById('query').focus()">
+<body>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/clients.png" alt="Clients" width="16" height="16" /> Clients:</h1>
-    <p>Found <?php echo $total_records ?> record(s).</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form id="clients" name="clients" method="get" action="<?php echo $_SERVER['PHP_SELF'] ?>">
       <table class="fulltable">
         <tr>
-          <td class="halftopcell"><h2>Search: </h2>
-            <table class="fulltable">
+          <td class="halftopcell"><h1><img src="../images/icons/clients.png" alt="Clients" width="16" height="16" /> Clients:</h1>
+          <table class="fulltable">
               <tr>
-                <td class="firstcell">for query:</td>
-                <td><input name="query" type="text" class="entrytext" id="query" /></td>
+                <td class="justred">Found <?php echo $total_records ?> record(s).</td>
               </tr>
               <tr>
-                <td class="firstcell">&nbsp;</td>
+                <td><input name="query" type="text" class="entrytext" id="query" onclick="this.value=''" value="search query" /></td>
+              </tr>
+              
+              <tr>
                 <td><input name="create" type="button" class="button" id="create" onclick="window.location='create_client.php'" value="CREATE" />
+                  <input name="categories" type="button" class="button" id="categories" onclick="openWindow('manage_campaigns.php')" value="CAMPAIGNS" />
                   <input name="email" type="button" class="button" id="email" onclick="openWindow('mass_email_clients.php')" value="E-MAIL" />
-                  <input name="categories" type="button" class="button" id="categories" onclick="openWindow('manage_campaigns.php')" value="CAMPAIGNS" /></td>
+                  <input name="export" type="button" class="button" id="export" onclick="window.location='export_clients.php'" value="EXPORT" /></td>
               </tr>
-            </table></td>
+          </table></td>
           <td class="halftopcell"><img src="clients_pgraph.php" alt="Top Clients" /></td>
         </tr>
       </table>
@@ -81,10 +84,10 @@ $next_page = $total_records;
           <td width="8%" class="tabletop">&nbsp;</td>
           <td width="8%" class="tabletop">client #:</td>
           <td class="tabletop">full name:</td>
-          <td width="26%" class="tabletop">billing address:</td>
-          <td width="12%" class="tabletop">work number:</td>
-          <td width="12%" class="tabletop">mobile number:</td>
-          <td width="12%" class="tabletop">home number:</td>
+          <td width="24%" class="tabletop">billing address:</td>
+          <td width="14%" class="tabletop">primary number:</td>
+          <td width="20%" class="tabletop">campaign / spent:</td>
+          <td width="6%" class="tabletop">active:</td>
         </tr>
         <?php while($show_client = mysql_fetch_array($get_clients)) { ?>
         <?php $get_campaigns = mysql_query("SELECT * FROM campaigns WHERE campaign_id = " . $show_client['campaign_id'] . ""); ?>
@@ -105,21 +108,15 @@ $next_page = $total_records;
                   <td><span class="justred"><?php echo strtoupper($show_employee['last_name']) ?> <?php echo $show_employee['first_name'] ?></span><br>
                     <span class="smalltext"><?php echo $show_client['created'] ?></span></td>
                 </tr>
-                <tr>
-                  <td><span class="justred"><?php echo $show_campaign['name'] ?></span><br>
-                    <span class="smalltext"><?php echo $show_campaign['description'] ?></span></td>
-                </tr>
-                <tr>
-                  <td><span class="justred"><?php echo $show_company['currency_symbol'] ?><?php echo number_format($show_invoice_totals['total'], 2) ?></span></td>
-                </tr>
               </table>
-            </div></td>
+          </div></td>
           <td class="tablerowborder"><?php echo $show_client['billing_address'] ?><br />
             <span class="smalltext"><?php echo $show_client['billing_city'] ?> <?php echo $show_client['billing_province'] ?> <?php echo $show_client['billing_postal'] ?><br />
             <?php echo $show_client['billing_country'] ?></span></td>
-          <td class="tablerowborder"><?php echo $show_client['work_number'] ?></td>
-          <td class="tablerowborder"><?php echo $show_client['mobile_number'] ?></td>
-          <td class="tablerowborder"><?php echo $show_client['home_number'] ?></td>
+          <td class="tablerowborder"><?php echo $show_client['primary_number'] ?></td>
+          <td class="tablerowborder"><?php echo $show_campaign['name'] ?><br />
+            <span class="justred"><?php echo $show_company['currency_symbol'] ?><?php echo number_format($show_invoice_totals['total'], 2) ?></span></td>
+          <td class="tablerowborder"><?php echo $show_client['active'] ?></td>
         </tr>
         <?php } ?>
       </table>

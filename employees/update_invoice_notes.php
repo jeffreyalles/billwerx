@@ -4,14 +4,14 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 # Get company items:
 $get_company = mysql_query("SELECT * FROM company");
@@ -54,7 +54,7 @@ header("Location: update_invoice_notes.php?invoice_id=$invoice_id");
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/files.png" alt="Client Files" width="16" height="16" /> Invoice Notes #: <?php echo $show_invoice['invoice_id'] ?></h1>
+    <h2>Invoice Notes #: <?php echo $show_invoice['invoice_id'] ?></h2>
   </div>
   <div id="content">
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="client_files" id="client_files">

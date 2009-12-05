@@ -4,14 +4,14 @@
 session_start();
 $page_access = 2;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include graph:
-include('../inc/phplot/phplot.php');
+# include_once graph:
+include_once('../inc/phplot/phplot.php');
 
 # Get all items:
 $get_expenses = mysql_query("SELECT category_id, SUM(amount) AS amount FROM expenses GROUP BY category_id ORDER BY amount DESC LIMIT 3");

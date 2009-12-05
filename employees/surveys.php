@@ -20,19 +20,19 @@ $show_company = mysql_fetch_array($get_company);
 # Setup pagination:
 # 2009/08/10 RC 5 Corrected undefined variable:
 if(isset($_GET['start'])) { $start = $_GET['start']; } else { $start = 0; };
-$previous_page = ($start - $show_company['records_per_page']);
-$next_page = ($start + $show_company['records_per_page']);
+$previous_page = ($start - $_SESSION['records_per_page']);
+$next_page = ($start + $_SESSION['records_per_page']);
 
 # Get invoice data:
 $get_total_surveys = mysql_query("SELECT * FROM surveys");
 $total_records = mysql_num_rows($get_total_surveys);
-$get_surveys = mysql_query("SELECT * FROM surveys ORDER BY invoice_id DESC LIMIT $start, " . $show_company['records_per_page'] . "");
+$get_surveys = mysql_query("SELECT * FROM surveys ORDER BY invoice_id DESC LIMIT $start, " . $_SESSION['records_per_page'] . "");
 
 # Start search:
 if(isset($_GET['query'])) {
 $query = $_GET['query'];
 $get_surveys = mysql_query("SELECT * FROM surveys WHERE (invoice_id LIKE '%$query%') OR (rating LIKE '%$query%')");
-$total_records = mysql_num_rows($get_suppliers);
+$total_records = mysql_num_rows($get_surveys);
 $next_page = $total_records;
 };
 
@@ -42,33 +42,34 @@ $next_page = $total_records;
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Refresh" content="<?php echo $show_company['session_timeout'] ?>;URL=../timeout.php" />
-<title><?php echo $show_company['company_name'] ?> - Surveys</title>
+<title><?php echo $show_company['company_name'] ?>- Surveys</title>
 <link href="../billwerx.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../scripts/form_assist.js"></script>
 <script type="text/javascript" src="../scripts/tooltip.js"></script>
 </head>
 <body>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/survey.png" alt="Surveys" width="16" height="16" /> Surveys:</h1>
-    <p>Found <?php echo $total_records ?> record(s).</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form id="surveys" name="surveys" method="get" action="<?php echo $_SERVER['PHP_SELF'] ?>">
       <table class="fulltable">
         <tr>
-          <td class="halftopcell"><h2>Search:</h2>
-            <table class="fulltable">
+          <td class="halftopcell"><h1><img src="../images/icons/survey.png" alt="Surveys" width="16" height="16" /> Surveys:</h1>
+          <table class="fulltable">
               <tr>
-                <td class="firstcell">for query:</td>
-                <td><input name="query" type="text" class="entrytext" id="query" /></td>
+                <td class="justred">Found <?php echo $total_records ?> record(s).</td>
               </tr>
               <tr>
-                <td class="firstcell">&nbsp;</td>
-                <td><input name="draw" type="submit" class="button" id="draw" onclick="openWindow('survey_draw.php')" value="DRAW" /></td>
+                <td><input name="query" type="text" class="entrytext" id="query" onclick="this.value=''" value="search query" /></td>
+              </tr>
+              <tr>
+                <td><input name="draw" type="button" class="button" id="draw" onclick="openWindow('survey_draw.php')" value="DRAW" /></td>
               </tr>
             </table></td>
           <td class="halftopcell"><img src="surveys_pgraph_history.php" alt="Results By Invoice" /> <img src="surveys_pgraph_average.php" alt="Average" /></td>
@@ -106,7 +107,7 @@ $next_page = $total_records;
             </div></td>
           <td class="tablerowborder"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?><br />
             <span class="smalltext"><a href="mailto:<?php echo $show_employee['email_address'] ?>"><?php echo $show_employee['email_address'] ?></a></span></td>
-          <td class="tablerowborder"><?php echo strtoupper($show_client['last_name']) ?>, <?php echo $show_client['first_name'] ?><br />
+          <td class="tablerowborder"><a href="update_client.php?client_id=<?php echo $show_client['client_id'] ?>"><?php echo strtoupper($show_client['last_name']) ?>, <?php echo $show_client['first_name'] ?></a><br />
             <span class="smalltext"><?php echo $show_survey['created'] ?></span></td>
           <td class="tablerowborder"><span class="justred"><?php echo $show_survey['rating'] ?></span></td>
           <td class="tablerowborder"><?php echo $show_survey['comments'] ?></td>

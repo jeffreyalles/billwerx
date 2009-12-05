@@ -4,13 +4,13 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include vcard class:
+# include_once vcard class:
 require_once('../inc/vcard/class_vcard.php');
 
 $get_company = mysql_query("SELECT * FROM company");
@@ -101,7 +101,7 @@ $vc->data['email1'] = $show_supplier['email_address'];
 /*
 Contact's website
 */
-#$vc->data['url'] = "http://www.troywolf.com";
+$vc->data['url'] = $show_supplier['website'];
 
 /*
 Some other contact data.

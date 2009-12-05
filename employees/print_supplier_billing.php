@@ -4,11 +4,11 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -18,7 +18,7 @@ $supplier_id = $_GET['supplier_id'];
 $get_supplier = mysql_query("SELECT * FROM suppliers WHERE supplier_id = '$supplier_id'");
 $show_supplier = mysql_fetch_array($get_supplier);
 
-# Include FPDF class:
+# include_once FPDF class:
 define('FPDF_FONTPATH','font/');
 require('../inc/fpdf/html_table.php');
 
@@ -35,6 +35,6 @@ $pdf->SetFont('Arial', '', 12);
 $pdf->Cell(85, 5, strtoupper($show_supplier['billing_address']), 0, 2, 'L');
 $pdf->Cell(85, 5, strtoupper($show_supplier['billing_city'] . ' ' . $show_supplier['billing_province'] . '  ' . $show_supplier['billing_postal']), 0, 2, 'L');
 $pdf->Cell(85, 5, strtoupper($show_supplier['billing_country']), 0, 2, 'L');
-$pdf->Output();
+$pdf->Output(strtolower($show_supplier['first_name']) . '_billing_label.pdf', 'D');
 
 ?> 

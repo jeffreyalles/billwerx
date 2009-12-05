@@ -58,18 +58,18 @@ $get_client_notes = mysql_query("SELECT note_id, AES_DECRYPT(note, '$encryption_
 </div>
 <script type="text/javascript" src="../scripts/float_layer.js"></script>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/summary.png" alt="Summary" /> Summary: <?php echo strtoupper($show_client['last_name']) ?>, <?php echo $show_client['first_name'] ?></h1>
-    <p><?php echo $show_client['first_name'] ?> <?php echo $show_client['last_name'] ?> your account was created on <?php echo $show_client['created'] ?>.</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <table class="fulltable">
       <tr>
-        <td class="halftopcell"><h2>Payment:</h2>
-          <form id="form1" name="form1" method="post" action="credit_card_payment.php">
+        <td class="halftopcell"><h1><img src="../images/icons/payments.png" alt="Payment" width="16" height="16" /> Payment:</h1>
+        <form id="form1" name="form1" method="post" action="credit_card_payment.php">
             <table class="fulltable">
               <tr>
                 <td class="firstcell">invoice and purpose:</td>
@@ -149,7 +149,7 @@ $get_client_notes = mysql_query("SELECT note_id, AES_DECRYPT(note, '$encryption_
               <td class="tablerowborder"><?php echo $show_payment['payment_id'] ?></td>
               <td class="tablerowborder"><?php echo $show_payment_method['name'] ?><br />
                 <span class="smalltext"><?php echo $show_payment['date_received'] ?></span></td>
-              <td class="tablerowborder"><a href="../global/download_payment_file.php?payment_id=<?php echo $show_payment['payment_id'] ?>"><?php echo $show_payment['reference'] ?></a></td>
+              <td class="tablerowborder"><a href="javascript:openWindow('../global/print_receipt.php?payment_id=<?php echo $show_payment['payment_id'] ?>')"><?php echo $show_payment['reference'] ?></a></td>
               <td class="tablerowborder"><span class="justred"><?php echo $show_company['currency_symbol'] ?><?php echo number_format($show_payment['amount'], 2) ?></span></td>
             </tr>
             <?php } ?>
