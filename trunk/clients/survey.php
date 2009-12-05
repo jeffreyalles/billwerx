@@ -108,8 +108,9 @@ header("Location: survey_complete.php");
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/survey.png" alt="Survey" width="16" height="16" /> Survey:</h1>
-    <p>Your feedback is valued and is used to improve our business.</p>
+    <h2>Survey:</h2>
+    <h3>Your feedback is valued and is used to improve our business.</h3>
+    <p>Thank you for taking the time to complete our quick single question survey. The information you provide can be accessed by other potential iCube Development clients and is published on the iCube Development website.</p>
   </div>
   <div id="content">
     <form id="form1" name="form1" method="post" action="">

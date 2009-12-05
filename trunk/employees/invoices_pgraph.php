@@ -4,14 +4,14 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include graph:
-include('../inc/phplot/phplot.php');
+# include_once graph:
+include_once('../inc/phplot/phplot.php');
 
 # Get all invoices:
 #$get_invoices = mysql_query("SELECT MONTH(date_created) AS month, YEAR(date_created) AS year, SUM(total) AS invoice_totals FROM invoices GROUP BY MONTH(date_created) ORDER BY year, month LIMIT 6");

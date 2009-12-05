@@ -22,8 +22,8 @@ session_destroy();
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="images/icons/logout.png" alt="Logout" width="16" height="16" /> Logout:</h1>
-    <p>You have successfully ended your session.</p>
+    <h2>Logout:</h2>
+    <h3>You have successfully ended your session.</h3>
   </div>
   <div id="content">
     <form id="form1" name="form1" method="post" action="">

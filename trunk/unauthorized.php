@@ -18,8 +18,8 @@ $show_company = mysql_fetch_array($get_company);
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="images/icons/unauthorized.png" alt="Unauthorized" width="16" height="16" /> Unauthorized:</h1>
-    <p>The e-mail address and account password you provided cannot be authenticated. Please check your account details and try again.</p>
+    <h2>Unauthorized:</h2>
+    <h3>Invalid e-mail address or password, please try again.</h3>
   </div>
   <div id="content">
     <form id="form1" name="form1" method="post" action="">

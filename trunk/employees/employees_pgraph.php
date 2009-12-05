@@ -4,14 +4,14 @@
 session_start();
 $page_access = 2;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include graph:
-include('../inc/phplot/phplot.php');
+# include_once graph:
+include_once('../inc/phplot/phplot.php');
 
 # Get all invoices:
 $get_invoices = mysql_query("SELECT employee_id, SUM(total) AS invoice_totals FROM invoices GROUP BY employee_id ORDER by invoice_totals DESC LIMIT 5");

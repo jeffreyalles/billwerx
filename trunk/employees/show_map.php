@@ -8,11 +8,11 @@ header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']); e
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -37,17 +37,17 @@ $show_client = mysql_fetch_array($get_client);
 <body onLoad="initialize();codeAddress()">
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/map.png" alt="Client Files" width="16" height="16" /> Show Map:</h1>
-    <p>Viewing map for the client: <a href="mailto:<?php echo $show_client['email_address'] ?>"><?php echo strtoupper($show_client['last_name']) ?>, <?php echo $show_client['first_name'] ?></a>.</p>
+    <h2>Show Map:</h2>
+    <h3>Viewing map for the client: <a href="mailto:<?php echo $show_client['email_address'] ?>"><?php echo strtoupper($show_client['last_name']) ?>, <?php echo $show_client['first_name'] ?></a>.</h3>
   </div>
   <div id="content">
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="client_files" id="client_files">
       <table class="fulltable">
         <tr>
           <td><select name="address" class="entrytext" id="address" onchange="codeAddress()">
-            <option value="<?php echo $show_client['billing_address'] ?> <?php echo $show_client['billing_city'] ?> <?php echo $show_client['billing_province'] ?> <?php echo $show_client['billing_country'] ?>">Billing Address (Default)</option>
-            <option value="<?php echo $show_client['shipping_address'] ?> <?php echo $show_client['shipping_city'] ?> <?php echo $show_client['shipping_province'] ?> <?php echo $show_client['shipping_country'] ?>">Shipping Address</option>
-            </select>          </td>
+              <option value="<?php echo $show_client['billing_address'] ?> <?php echo $show_client['billing_city'] ?> <?php echo $show_client['billing_province'] ?> <?php echo $show_client['billing_country'] ?>">Billing Address (Default)</option>
+              <option value="<?php echo $show_client['shipping_address'] ?> <?php echo $show_client['shipping_city'] ?> <?php echo $show_client['shipping_province'] ?> <?php echo $show_client['shipping_country'] ?>">Shipping Address</option>
+            </select></td>
         </tr>
       </table>
     </form>

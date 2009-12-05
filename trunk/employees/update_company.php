@@ -4,14 +4,14 @@
 session_start();
 $page_access = 3;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -34,8 +34,6 @@ $tax1_percent = $_POST['tax1_percent'];
 $tax2_name = $_POST['tax2_name'];
 $tax2_percent = $_POST['tax2_percent'];
 
-$records_per_page = $_POST['records_per_page'];
-
 $session_timeout = $_POST['session_timeout'];
 $ssl_certificate_html = str_replace('"',"'",$_POST['ssl_certificate_html']);
 
@@ -52,7 +50,7 @@ $shipping_postal = $_POST['shipping_postal'];
 $shipping_country = $_POST['shipping_country'];
 
 # Assign values to a database table:
-$doSQL = "UPDATE company SET company_name = '$company_name', tag_line = '$tag_line', work_number = '$work_number', fax_number = '$fax_number', email_address = '$email_address', markup_percent = '$markup_percent', payment_terms = '$payment_terms', currency_symbol = '$currency_symbol', business_number = '$business_number', tax1_name = '$tax1_name', tax1_percent = '$tax1_percent', tax2_name = '$tax2_name', tax2_percent = '$tax2_percent', records_per_page = '$records_per_page', session_timeout = '$session_timeout', ssl_certificate_html = '$ssl_certificate_html', billing_address = '$billing_address', billing_city = '$billing_city', billing_province = '$billing_province', billing_postal = '$billing_postal', billing_country = '$billing_country', shipping_address = '$shipping_address', shipping_city = '$shipping_city', shipping_province = '$shipping_province', shipping_postal = '$shipping_postal', shipping_country = '$shipping_country'";
+$doSQL = "UPDATE company SET company_name = '$company_name', tag_line = '$tag_line', work_number = '$work_number', fax_number = '$fax_number', email_address = '$email_address', markup_percent = '$markup_percent', payment_terms = '$payment_terms', currency_symbol = '$currency_symbol', business_number = '$business_number', tax1_name = '$tax1_name', tax1_percent = '$tax1_percent', tax2_name = '$tax2_name', tax2_percent = '$tax2_percent', session_timeout = '$session_timeout', ssl_certificate_html = '$ssl_certificate_html', billing_address = '$billing_address', billing_city = '$billing_city', billing_province = '$billing_province', billing_postal = '$billing_postal', billing_country = '$billing_country', shipping_address = '$shipping_address', shipping_city = '$shipping_city', shipping_province = '$shipping_province', shipping_postal = '$shipping_postal', shipping_country = '$shipping_country'";
 
 # Perform SQL command, show error (if any):
 mysql_query($doSQL) or die(mysql_error());
@@ -74,12 +72,12 @@ header("Location: update_company.php");
 </head>
 <body>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/company.png" alt="Company" width="16" height="16" /> Update Company:</h1>
-    <p>Record updated <?php echo $show_company['updated'] ?>.</p>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
   </div>
   <div id="navbar">
-    <?php include("navbar.php") ?>
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="company" id="company">
@@ -142,13 +140,6 @@ header("Location: update_company.php");
               <tr>
                 <td class="firstcell">tax 2 %:</td>
                 <td><input name="tax2_percent" type="text" class="entrytext" id="tax2_percent" value="<?php echo $show_company['tax2_percent'] ?>" /></td>
-              </tr>
-            </table>
-            <h2>Display:</h2>
-            <table class="fulltable">
-              <tr>
-                <td class="firstcell">records per page:</td>
-                <td><input name="records_per_page" type="text" class="entrytext" id="records_per_page" value="<?php echo $show_company['records_per_page'] ?>" /></td>
               </tr>
             </table>
             </td>

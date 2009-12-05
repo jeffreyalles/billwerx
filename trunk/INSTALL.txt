@@ -1,9 +1,0 @@
-INSTALLATION:
-=============
-
-This is a open beta; report bugs to matthew@billwerx.com; there is NO official support for the use of Billwerx until a final version is released.
-
-- Create a MySQL database.
-- Import .SQL file into the new database you created.
-- Edit /inc/dbconfig.php to match required MySQL username, password, database name.
-- Login using "install@domain.com" with the password "install".

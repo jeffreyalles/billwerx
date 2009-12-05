@@ -22,8 +22,8 @@ session_destroy();
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="images/icons/timeout.png" alt="Timeout" width="16" height="16" /> Timeout:</h1>
-    <p>Your account has been inactive longer than permitted.</p>
+    <h2>Timeout:</h2>
+    <h3>Your account has been inactive longer than permitted.</h3>
   </div>
   <div id="content">
     <form id="form1" name="form1" method="post" action="">

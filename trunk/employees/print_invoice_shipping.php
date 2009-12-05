@@ -4,11 +4,11 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -20,7 +20,7 @@ $show_invoice = mysql_fetch_array($get_invoice);
 $get_client = mysql_query("SELECT * FROM clients WHERE client_id = " . $show_invoice['client_id'] . "");
 $show_client = mysql_fetch_array($get_client);
 
-# Include FPDF class:
+# include_once FPDF class:
 define('FPDF_FONTPATH','font/');
 require('../inc/fpdf/html_table.php');
 
@@ -37,6 +37,6 @@ $pdf->SetFont('Arial', '', 12);
 $pdf->Cell(85, 5, strtoupper($show_invoice['shipping_address']), 0, 2, 'L');
 $pdf->Cell(85, 5, strtoupper($show_invoice['shipping_city'] . ' ' . $show_invoice['shipping_province'] . '  ' . $show_invoice['shipping_postal']), 0, 2, 'L');
 $pdf->Cell(85, 5, strtoupper($show_invoice['shipping_country']), 0, 2, 'L');
-$pdf->Output();
+$pdf->Output(strtolower($show_invoice['invoice_id']) . '_shipping_label.pdf', 'D');
 
 ?> 

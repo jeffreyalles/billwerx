@@ -66,15 +66,15 @@ header("Location: credit_card_payment_complete.php");
 <body onload="document.getElementById('number').focus()">
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/credit_cards.png" alt="Credit Card Payment" width="16" height="16" /> Credit Card Payment:</h1>
-    <p>To continue simply enter your credit card number and expiration date. For security, please allow 24 hours for your payment to reflect.</p>
+    <h2>Credit Card Payment:</h2>
+    <h3>To continue simply enter your credit card number and expiration date.</h3>
   </div>
   <div id="content">
     <form id="form1" name="form1" method="post" action="">
       <table class="fulltable">
         <tr>
           <td class="firstcell">type:</td>
-          <td><select name="type" id="type">
+          <td><select name="type" class="entrytext" id="type">
               <option value="VISA">VISA</option>
               <option value="MasterCard">MasterCard</option>
               <option value="Amex">Amex</option>

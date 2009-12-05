@@ -56,6 +56,8 @@ $show_employee = mysql_fetch_array($get_employees);
 # Forward if email and password match employee table:
 if($show_client['account_password'] == $account_password) {
 $_SESSION['client_id'] = $show_client['client_id'];
+$_SESSION['client_first_name'] = $show_client['first_name'];
+$_SESSION['client_last_name'] = $show_client['last_name'];
 $doSQL = "INSERT INTO client_access_logs (client_id, ipv4_address, hostname) VALUES ('$_SESSION[client_id]', '$ipv4_address', '$hostname')";
 mysql_query($doSQL) or die(mysql_error());
 header("Location: clients/index.php");
@@ -68,6 +70,7 @@ $_SESSION['access_level'] = $show_employee['access_level'];
 $_SESSION['employee_id'] = $show_employee['employee_id'];
 $_SESSION['employee_first_name'] = $show_employee['first_name'];
 $_SESSION['employee_last_name'] = $show_employee['last_name'];
+$_SESSION['records_per_page'] = $show_employee['records_per_page'];
 $doSQL = "INSERT INTO employee_access_logs (employee_id, ipv4_address, hostname) VALUES ('$_SESSION[employee_id]', '$ipv4_address', '$hostname')";
 mysql_query($doSQL) or die(mysql_error());
 header("Location: employees/index.php");
@@ -84,7 +87,7 @@ exit;
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php echo $show_company['company_name'] ?> - Login</title>
+<title><?php echo $show_company['company_name'] ?>- Login</title>
 <link href="billwerx.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="scripts/form_assist.js"></script>
 </head>
@@ -94,10 +97,7 @@ exit;
 </div>
 <script type="text/javascript" src="scripts/float_layer.js"></script>
 <div id="smallwrap">
-  <div id="header">
-    <h1><img src="images/icons/login.png" alt="Login" width="16" height="16" /> Login:</h1>
-    <p>Please enter your e-mail address and account password to continue.</p>
-  </div>
+  <div id="header"><img src="global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
   <div id="content">
     <form id="form1" name="form1" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
       <table class="fulltable">

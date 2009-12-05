@@ -4,15 +4,15 @@
 session_start();
 $page_access = 3;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
-include("../inc/phpmailer/class.phpmailer.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
+include_once("../inc/phpmailer/class.phpmailer.php");
 
 # Get company data:
 $get_company = mysql_query("SELECT * FROM company");

@@ -4,17 +4,17 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include graph:
-include('../inc/phplot/phplot.php');
+# include_once graph:
+include_once('../inc/phplot/phplot.php');
 
 # Get all invoices:
-$get_invoices = mysql_query("SELECT MONTH(date_created) as month, DAY(date_created) AS day, SUM(total) AS invoice_totals FROM invoices GROUP BY month, day ORDER BY month DESC, day DESC LIMIT 9");
+$get_invoices = mysql_query("SELECT MONTH(date_created) as month, DAY(date_created) AS day, SUM(total) AS invoice_totals FROM invoices GROUP BY month, day ORDER BY month DESC, day DESC LIMIT 7");
 
 while($show_invoice = mysql_fetch_array($get_invoices)) {
 $graph_data[] = array($show_invoice['month'] . "-" . $show_invoice['day'], $show_invoice['invoice_totals']);

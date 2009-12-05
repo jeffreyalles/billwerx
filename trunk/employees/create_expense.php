@@ -4,14 +4,14 @@
 session_start();
 $page_access = 2;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -67,8 +67,8 @@ mysql_query($doSQL) or die(mysql_error());
 <body onload="document.getElementById('amount').focus()" onunload="window.opener.location.reload()">
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/expenses.png" alt="Create Expense" width="16" height="16" /> Create Expense:</h1>
-    <p>You must enter a valid e-mail address and password to login.</p>
+    <h2>Create Expense:</h2>
+    <h3>You must enter a valid e-mail address and password to login.</h3>
   </div>
   <div id="content">
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="create_payment" id="create_payment">

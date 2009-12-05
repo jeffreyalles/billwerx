@@ -4,11 +4,11 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -46,12 +46,12 @@ $total_records = mysql_num_rows($get_invoices);
 </div>
 <script type="text/javascript" src="../scripts/float_layer.js"></script>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/summary.png" alt="Invoice Summary" /> Summary:</h1>
-    <p>Found <?php echo $total_records ?> record(s).</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form id="index" name="index" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
@@ -78,7 +78,7 @@ $total_records = mysql_num_rows($get_invoices);
         <?php $get_employees = mysql_query("SELECT * FROM employees WHERE employee_id = " . $show_invoice['employee_id'] . ""); ?>
         <?php $show_employee = mysql_fetch_array($get_employees) ?>
         <tr class="tablelist">
-          <td class="tablerowborder"><a href="javascript:openWindow('e-mail_invoice.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/email_attachment.png" alt="E-mail Invoice" width="16" height="16" class="iconspacer" /></a> <a href="javascript:openWindow('create_payment.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/payments.png" alt="Post Payment" width="16" height="16" class="iconspacer" /></a></td>
+          <td class="tablerowborder"><a href="javascript:openWindow('e-mail_invoice.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/email_compose.png" alt="E-mail Invoice" width="16" height="16" class="iconspacer" /></a> <a href="javascript:openWindow('create_payment.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/payments.png" alt="Post Payment" width="16" height="16" class="iconspacer" /></a></td>
           <td class="tablerowborder"><a href="update_invoice.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>" onmouseover="tooltip(event, '<?php echo $show_invoice['invoice_id'] ?>')" onmouseout="tooltip(event, '<?php echo $show_invoice['invoice_id'] ?>')"><?php echo $show_invoice['invoice_id'] ?></a>
             <div class="tooltip" id="<?php echo $show_invoice['invoice_id'] ?>">
             <table>

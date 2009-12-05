@@ -8,8 +8,8 @@
 <body>
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="images/icons/unauthorized.png" alt="Restricted" width="16" height="16" /> Restricted:</h1>
-    <p>Your account does not have the required  access level to process your request.</p>
+    <h2>Restricted:</h2>
+    <h3>Your account does not have the required  access level to process your request.</h3>
   </div>
   <div id="content">
     <form id="form1" name="form1" method="post" action="">

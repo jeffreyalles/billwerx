@@ -42,12 +42,12 @@ $get_client_notes = mysql_query("SELECT note_id, AES_DECRYPT(note, '$encryption_
 </head>
 <body>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/files.png" alt="Client Files" /> Client Files:</h1>
-    <p>These files are associated with your account.</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <table class="fulltable">

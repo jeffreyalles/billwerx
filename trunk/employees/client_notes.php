@@ -4,14 +4,14 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -57,12 +57,12 @@ header("Location: client_notes.php?client_id=$client_id");
 </head>
 <body>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/note.png" alt="Client Notes" width="16" height="16" /> Client Notes:</h1>
-    <p>Found <?php echo $total_records ?> record(s).</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form id="update_client" name="update_client" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
@@ -71,6 +71,7 @@ header("Location: client_notes.php?client_id=$client_id");
           <td width="8%" class="tabletop">&nbsp;</td>
           <td width="16%" class="tabletop">created:</td>
           <td class="tabletop">note:</td>
+          <td class="tabletop">Public</td>
         </tr>
         <?php while($show_client_note = mysql_fetch_array($get_client_notes)) { ?>
         <?php $get_employees = mysql_query("SELECT * FROM employees WHERE employee_id = " . $show_client_note['employee_id'] . "") ?>
@@ -80,12 +81,14 @@ header("Location: client_notes.php?client_id=$client_id");
           <td class="tablerowborder"><?php echo $show_client_note['created'] ?><br />
           <span class="smalltext"><a href="mailto:<?php echo $show_employee['email_address'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a></span></td>
           <td class="tablerowborder"><?php echo nl2br($show_client_note['note']) ?></td>
+          <td class="tablerowborder">&nbsp;</td>
         </tr>
         <?php } ?>
         <tr>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td><textarea name="note" class="entrybox" id="note"></textarea></td>
+          <td>&nbsp;</td>
         </tr>
       </table>
       <table class="fulltable">

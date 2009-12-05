@@ -4,14 +4,14 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 # Get company items:
 $get_company = mysql_query("SELECT * FROM company");
@@ -155,11 +155,14 @@ header("Location: update_invoice.php?invoice_id=$invoice_id");
 <body>
 <div id="wrap">
   <div id="header">
-    <h1><img src="../images/icons/invoices.png" alt="Update Invoice" width="16" height="16" /> Update Invoice: #<?php echo $show_invoice['invoice_id'] ?></h1>
-    <p>Record created <?php echo $show_invoice['created'] ?> by: <a href="mailto:<?php echo $show_employee['email_address'] ?>?subject=Invoice: <?php echo $show_invoice['invoice_id'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a>.</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+    <h1><?php echo $show_invoice['invoice_id'] ?></h1>
+    <h3>Record created <?php echo $show_invoice['created'] ?> by: <a href="mailto:<?php echo $show_employee['email_address'] ?>?subject=Client: <?php echo strtoupper($show_client['last_name']) ?>, <?php echo $show_client['first_name'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a>.</h3>
+  </div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form id="update_invoice" name="update_invoice" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
@@ -169,22 +172,24 @@ header("Location: update_invoice.php?invoice_id=$invoice_id");
             <table class="fulltable">
               <tr>
                 <td class="firstcell">client:<br />
-                  <a href="javascript:openWindow('change_invoiced_client.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')">change invoiced client</a></td>
+                  <a href="javascript:openWindow('change_invoiced_client.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')">change client</a></td>
                 <td><input name="client" type="text" class="entrytext" id="client" readonly="readonly" value="<?php echo strtoupper($show_client['last_name']) ?>, <?php echo $show_client['first_name'] ?>" />
-                  <a href="update_client.php?client_id=<?php echo $show_invoice['client_id'] ?>"><img src="../images/icons/information.png" alt="Client Details" width="16" height="16" class="iconspacer" /></a></td>
+                  <a href="update_client.php?client_id=<?php echo $show_invoice['client_id'] ?>"></a></td>
+                <td class="lastcell"><a href="update_client.php?client_id=<?php echo $show_invoice['client_id'] ?>"><img src="../images/icons/information.png" alt="Client Details" width="16" height="16" class="iconspacer" /></a></td>
               </tr>
               <tr>
                 <td class="firstcell">purpose:</td>
-                <td><input name="purpose" type="text" class="entrytext" id="purpose" value="<?php echo $show_invoice['purpose'] ?>" /></td>
+                <td colspan="2"><input name="purpose" type="text" class="entrytext" id="purpose" value="<?php echo $show_invoice['purpose'] ?>" /></td>
               </tr>
               <tr>
                 <td class="firstcell">easypay id:</td>
-                <td><input name="easypay_id" type="text" class="entrytext" id="easypay_id" value="<?php echo $show_invoice['easypay_id'] ?>" /></td>
+                <td colspan="2"><input name="easypay_id" type="text" class="entrytext" id="easypay_id" value="<?php echo $show_invoice['easypay_id'] ?>" /></td>
               </tr>
               <tr>
                 <td class="firstcell">billing e-mail address:</td>
                 <td><input name="billing_email_address" type="text" class="entrytext" id="billing_email_address" value="<?php echo $show_invoice['billing_email_address'] ?>" />
-                  <a href="mailto:<?php echo $show_invoice['billing_email_address'] ?>"><img src="../images/icons/email.png" alt="E-mail" width="16" height="16" class="iconspacer" /></a></td>
+                  <a href="mailto:<?php echo $show_invoice['billing_email_address'] ?>"></a></td>
+                <td class="lastcell"><a href="mailto:<?php echo $show_invoice['billing_email_address'] ?>"><img src="../images/icons/email.png" alt="E-mail" width="16" height="16" class="iconspacer" /></a></td>
               </tr>
             </table>
             <h2>Billing: </h2>
@@ -193,25 +198,26 @@ header("Location: update_invoice.php?invoice_id=$invoice_id");
                 <td class="firstcell">billing address:<br />
                   <a href="javascript:copyShipping()">copy shipping information</a></td>
                 <td><input name="billing_address" type="text" class="entrytext" id="billing_address" value="<?php echo $show_invoice['billing_address'] ?>" />
-                  <a href="javascript:openWindow('show_map.php?client_id=<?php echo $show_client['client_id'] ?>')"><img src="../images/icons/map.png" alt="Show Map" width="16" height="16" class="iconspacer" /></a></td>
+                  <a href="javascript:openWindow('show_map.php?client_id=<?php echo $show_client['client_id'] ?>')"></a></td>
+                <td class="lastcell"><a href="javascript:openWindow('show_map.php?client_id=<?php echo $show_client['client_id'] ?>')"><img src="../images/icons/map.png" alt="Show Map" width="16" height="16" class="iconspacer" /></a></td>
               </tr>
               <tr>
                 <td class="firstcell">billing city:</td>
-                <td><input name="billing_city" type="text" class="entrytext" id="billing_city" value="<?php echo $show_invoice['billing_city'] ?>" /></td>
+                <td colspan="2"><input name="billing_city" type="text" class="entrytext" id="billing_city" value="<?php echo $show_invoice['billing_city'] ?>" /></td>
               </tr>
               <tr>
                 <td class="firstcell">billing province:</td>
-                <td><input name="billing_province" type="text" class="entrytext" id="billing_province" value="<?php echo $show_invoice['billing_province'] ?>" /></td>
+                <td colspan="2"><input name="billing_province" type="text" class="entrytext" id="billing_province" value="<?php echo $show_invoice['billing_province'] ?>" /></td>
               </tr>
               <tr>
                 <td class="firstcell">billing postal:</td>
-                <td><input name="billing_postal" type="text" class="entrytext" id="billing_postal" value="<?php echo $show_invoice['billing_postal'] ?>" /></td>
+                <td colspan="2"><input name="billing_postal" type="text" class="entrytext" id="billing_postal" value="<?php echo $show_invoice['billing_postal'] ?>" /></td>
               </tr>
               <tr>
                 <td class="firstcell">billing country:</td>
-                <td><input name="billing_country" type="text" class="entrytext" id="billing_country" value="<?php echo $show_invoice['billing_country'] ?>" /></td>
+                <td colspan="2"><input name="billing_country" type="text" class="entrytext" id="billing_country" value="<?php echo $show_invoice['billing_country'] ?>" /></td>
               </tr>
-            </table></td>
+          </table></td>
           <td class="halftopcell"><h2>Details: </h2>
             <table class="fulltable">
               <tr>
@@ -312,7 +318,7 @@ header("Location: update_invoice.php?invoice_id=$invoice_id");
         <tr>
           <td rowspan="6" class="topalign"><table class="fulltable">
               <tr>
-                <td><a href="javascript:openWindow('update_invoice_notes.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/note.png" alt="Invoice Notes" class="iconspacer" /></a> <a href="javascript:openWindow('../global/print_invoice.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/print.png" alt="Print Invoice" width="16" height="16" class="iconspacer" /></a> <a href="javascript:openWindow('e-mail_invoice.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/email_attachment.png" alt="E-mail Invoice" class="iconspacer" /></a> <a href="javascript:openWindow('print_invoice_shipping.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/shipping_label.png" alt="Print Shipping Label" width="16" height="16" class="iconspacer" /></a> <a href="javascript:openWindow('print_invoice_identification.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/indentification_label.png" alt="Identification Label" class="iconspacer" /></a></td>
+                <td><a href="javascript:openWindow('update_invoice_notes.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/note.png" alt="Invoice Notes" class="iconspacer" /></a> <a href="javascript:openWindow('../global/print_invoice.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/print.png" alt="Print Invoice" width="16" height="16" class="iconspacer" /></a> <a href="javascript:openWindow('e-mail_invoice.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>')"><img src="../images/icons/email_attachment.png" alt="E-mail Invoice" class="iconspacer" /></a> <a href="print_invoice_shipping.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>"><img src="../images/icons/shipping_label.png" alt="Print Shipping Label" width="16" height="16" class="iconspacer" /></a> <a href="print_invoice_identification.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>"><img src="../images/icons/indentification_label.png" alt="Identification Label" class="iconspacer" /></a></td>
               </tr>
             </table>
             <table class="fulltable">

@@ -4,14 +4,14 @@
 session_start();
 $page_access = 2;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -29,6 +29,7 @@ $show_employee = mysql_fetch_array($get_employees);
 if(isset($_POST['update'])) {
 
 $category_id = $_POST['category_id'];
+$active = $_POST['active'];
 
 $name = strtoupper($_POST['name']);
 $description = strtolower($_POST['description']);
@@ -42,7 +43,7 @@ $markup = ($profit / $cost) * 100;
 $item_id = $_POST['item_id'];
 
 # Assign values to a database table:
-$doSQL = "UPDATE items SET category_id = '$category_id', name = '$name', description = '$description', cost = '$cost', price = '$price', profit = '$profit', markup = '$markup' WHERE item_id = '$item_id'";
+$doSQL = "UPDATE items SET category_id = '$category_id', active = '$active', name = '$name', description = '$description', cost = '$cost', price = '$price', profit = '$profit', markup = '$markup' WHERE item_id = '$item_id'";
 
 # Perform SQL command, show error (if any):
 mysql_query($doSQL) or die(mysql_error());
@@ -62,8 +63,8 @@ mysql_query($doSQL) or die(mysql_error());
 <body onload="document.getElementById('name').focus()" onunload="window.opener.location.reload();window.close()">
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/items.png" alt="Update Item" width="16" height="16" /> Update Item:</h1>
-    <p>Record created <?php echo $show_item['created'] ?> by: <a href="mailto:<?php echo $show_employee['email_address'] ?>?subject=Item: <?php echo $show_item['name'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a>.</p>
+    <h2>Update Item:</h2>
+    <h3>Record created <?php echo $show_item['created'] ?> by: <a href="mailto:<?php echo $show_employee['email_address'] ?>?subject=Item: <?php echo $show_item['name'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a>.</h3>
   </div>
   <div id="content">
     <form id="update_item" name="update_item" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
@@ -75,26 +76,27 @@ mysql_query($doSQL) or die(mysql_error());
             <option value="<?php echo $show_item_category['category_id'] ?>"<?php if($show_item['category_id'] == $show_item_category['category_id']) { ?> selected="selected"<?php } ?>><?php echo $show_item_category['name'] ?></option>
             <?php } ?>
           </select></td>
+          <td class="lastcell"><input name="active" type="checkbox" id="active" value="1"<?php if($show_item['active'] != 0) { ?> checked="checked"<?php } ?> /></td>
         </tr>
         <tr>
           <td class="firstcell">name:</td>
-          <td><input name="name" type="text" class="entrytext" id="name" value="<?php echo $show_item['name'] ?>" /></td>
+          <td colspan="2"><input name="name" type="text" class="entrytext" id="name" value="<?php echo $show_item['name'] ?>" /></td>
         </tr>
         <tr>
           <td class="firstcell">description:</td>
-          <td><input name="description" type="text" class="entrytext" id="description" value="<?php echo $show_item['description'] ?>" /></td>
+          <td colspan="2"><input name="description" type="text" class="entrytext" id="description" value="<?php echo $show_item['description'] ?>" /></td>
         </tr>
         <tr>
           <td class="firstcell">cost:</td>
-          <td><input name="cost" type="text" class="entrytext" id="cost" value="<?php echo number_format($show_item['cost'], 2) ?>" /></td>
+          <td colspan="2"><input name="cost" type="text" class="entrytext" id="cost" value="<?php echo number_format($show_item['cost'], 2) ?>" /></td>
         </tr>
         <tr>
           <td class="firstcell">price:</td>
-          <td><input name="price" type="text" class="entrytext" id="price" value="<?php echo number_format($show_item['price'], 2) ?>" /></td>
+          <td colspan="2"><input name="price" type="text" class="entrytext" id="price" value="<?php echo number_format($show_item['price'], 2) ?>" /></td>
         </tr>
         <tr>
           <td class="firstcell">&nbsp;</td>
-          <td><input name="update" type="submit" class="button" id="update" value="UPDATE" />
+          <td colspan="2"><input name="update" type="submit" class="button" id="update" value="UPDATE" />
           <input name="item_id" type="hidden" id="item_id" value="<?php echo $show_item['item_id'] ?>" /></td>
         </tr>
       </table>

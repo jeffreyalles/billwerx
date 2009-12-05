@@ -4,11 +4,11 @@
 session_start();
 $page_access = 3;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
 # Get company data:
 $get_company = mysql_query("SELECT * FROM company");
@@ -16,19 +16,19 @@ $show_company = mysql_fetch_array($get_company);
 
 # Setup pagination:
 $start = $_GET['start']; if (empty($start)) $start = 0;
-$previous_page = ($start - $show_company['records_per_page']);
-$next_page = ($start + $show_company['records_per_page']);
+$previous_page = ($start - $_SESSION['records_per_page']);
+$next_page = ($start + $_SESSION['records_per_page']);
 
 # Get invoice data:
 $get_total_company_files = mysql_query("SELECT * FROM company_files");
 $total_records = mysql_num_rows($get_total_company_files);
-$get_company_files = mysql_query("SELECT * FROM company_files LIMIT $start, " . $show_company['records_per_page'] . "");
+$get_company_files = mysql_query("SELECT * FROM company_files LIMIT $start, " . $_SESSION['records_per_page'] . "");
 
 # Start search:
 if(isset($_POST['query'])) {
 $within = $_POST['within'];
 $query = $_POST['query'];
-$get_clients = mysql_query("SELECT * FROM clients WHERE $within LIKE '%$query%' LIMIT $start, " . $show_company['records_per_page'] . "");
+$get_clients = mysql_query("SELECT * FROM clients WHERE $within LIKE '%$query%' LIMIT $start, " . $_SESSION['records_per_page'] . "");
 };
 
 # If the size of the file is greater than zero (0) process:
@@ -76,12 +76,12 @@ header("Location: company_files.php");
 </head>
 <body>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/files.png" alt="Company Files" width="16" height="16" /> Company Files:</h1>
-    <p>Found <?php echo $total_records ?> record(s).</p>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
   </div>
   <div id="navbar">
-    <?php include("navbar.php") ?>
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="company" id="company">

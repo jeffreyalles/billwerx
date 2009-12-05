@@ -4,15 +4,15 @@
 session_start();
 $page_access = 1;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
 # Get query:
 $query = $_GET['query'];
-$get_items = mysql_query("SELECT * FROM items WHERE (description LIKE '%$query%') OR (name LIKE '%$query%') LIMIT 4"); ?>
+$get_items = mysql_query("SELECT * FROM items WHERE active = 1 AND (description LIKE '%$query%') OR (name LIKE '%$query%') LIMIT 4"); ?>
 
 <ul>
   <?php while($show_item = mysql_fetch_array($get_items)) { ?>

@@ -4,14 +4,14 @@
 session_start();
 $page_access = 2;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -19,13 +19,13 @@ $show_company = mysql_fetch_array($get_company);
 # Setup pagination:
 # 2009/08/10 RC 5 Corrected undefined variable:
 if(isset($_GET['start'])) { $start = $_GET['start']; } else { $start = 0; };
-$previous_page = ($start - $show_company['records_per_page']);
-$next_page = ($start + $show_company['records_per_page']);
+$previous_page = ($start - $_SESSION['records_per_page']);
+$next_page = ($start + $_SESSION['records_per_page']);
 
 # Get payment data:
 $get_total_payments = mysql_query("SELECT * FROM payments");
 $total_records = mysql_num_rows($get_total_payments);
-$get_payments = mysql_query("SELECT * FROM payments ORDER BY payment_id DESC LIMIT $start, " . $show_company['records_per_page'] . "");
+$get_payments = mysql_query("SELECT * FROM payments ORDER BY payment_id DESC LIMIT $start, " . $_SESSION['records_per_page'] . "");
 
 # Start search:
 if(isset($_GET['query'])) {
@@ -48,28 +48,31 @@ $next_page = $total_records;
 </head>
 <body>
 <div id="wrap">
-  <div id="header">
-    <h1><img src="../images/icons/payments.png" alt="Payments" width="16" height="16" /> Payments:</h1>
-    <p>Found <?php echo $total_records ?> record(s).</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+  <div id="header"><img src="../global/company_logo.php" alt="<?php echo $show_company['company_name'] ?> - powered by: Billwerx" /></div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form id="payments" name="payments" method="get" action="<?php echo $_SERVER['PHP_SELF'] ?>">
       <table class="fulltable">
         <tr>
-          <td class="halftopcell"><h2>Search: </h2>
-            <table class="fulltable">
+          <td class="halftopcell"><h1><img src="../images/icons/payments.png" alt="Payments" width="16" height="16" /> Payments:</h1>
+          <table class="fulltable">
               <tr>
-                <td class="firstcell">query:</td>
-                <td><input name="query" type="text" class="entrytext" id="query" /></td>
+                <td class="justred">Found <?php echo $total_records ?> record(s).</td>
               </tr>
               <tr>
-                <td class="firstcell">&nbsp;</td>
-                <td><input name="methods" type="button" class="button" id="methods" onclick="openWindow('update_payment_methods.php')" value="METHODS" /></td>
+                <td><input name="query" type="text" class="entrytext" id="query" onclick="this.value=''" value="search query" /></td>
               </tr>
-            </table></td>
+              
+              <tr>
+                <td><input name="methods" type="button" class="button" id="methods" onclick="openWindow('update_payment_methods.php')" value="METHODS" />
+                <input name="export" type="button" class="button" id="export" onclick="window.location='export_payments.php'" value="EXPORT" /></td>
+              </tr>
+          </table></td>
           <td class="halftopcell"><img src="payments_pgraph_method.php" alt="Top Payment Methods" /> <img src="payments_pgraph_total.php" alt="Totals" /></td>
         </tr>
       </table>
@@ -80,7 +83,7 @@ $next_page = $total_records;
           <td width="10%" class="tabletop">invoice #:</td>
           <td width="18%" class="tabletop">entered by:</td>
           <td class="tabletop">client:</td>
-          <td width="14%" class="tabletop">reference:</td>
+          <td width="16%" class="tabletop">reference / received:</td>
           <td width="10%" class="tabletop">amount:</td>
         </tr>
         <?php while($show_payment = mysql_fetch_array($get_payments)) { ?>
@@ -93,7 +96,7 @@ $next_page = $total_records;
         <?php $get_invoices = mysql_query("SELECT * FROM invoices WHERE invoice_id = " . $show_payment['invoice_id'] . ""); ?>
         <?php $show_invoice = mysql_fetch_array($get_invoices) ?>
         <tr class="tablelist">
-          <td class="tablerowborder"><a href="delete_payment.php?payment_id=<?php echo $show_payment['payment_id'] ?>" onClick="return confirm('Delete record #: <?php echo $show_payment['payment_id'] ?> (<?php echo $show_company['currency_symbol'] ?><?php echo $show_payment['amount'] ?> <?php echo $show_payment_method['name'] ?>)?')"><img src="../images/icons/delete.png" alt="Delete Payment" width="16" height="16" class="iconspacer" /></a> <a href="javascript:openWindow('e-mail_payment_received.php?payment_id=<?php echo $show_payment['payment_id'] ?>')"><img src="../images/icons/email_attachment.png" alt="E-Mail Invoice" width="16" height="16" class="iconspacer" /></a></td>
+          <td class="tablerowborder"><a href="delete_payment.php?payment_id=<?php echo $show_payment['payment_id'] ?>" onClick="return confirm('Delete record #: <?php echo $show_payment['payment_id'] ?> (<?php echo $show_company['currency_symbol'] ?><?php echo $show_payment['amount'] ?> <?php echo $show_payment_method['name'] ?>)?')"><img src="../images/icons/delete.png" alt="Delete Payment" width="16" height="16" class="iconspacer" /></a> <a href="javascript:openWindow('../global/print_receipt.php?payment_id=<?php echo $show_payment['payment_id'] ?>')"><img src="../images/icons/print.png" alt="Print Receipt" width="16" height="16" class="iconspacer" /></a></td>
           <td class="tablerowborder"><a href="javascript:openWindow('update_payment.php?payment_id=<?php echo $show_payment['payment_id'] ?>')"><?php echo $show_payment['payment_id'] ?></a><br />
             <span class="smalltext"><?php echo $show_payment_method['name'] ?></span></td>
           <td class="tablerowborder"><a href="update_invoice.php?invoice_id=<?php echo $show_payment['invoice_id'] ?>" onmouseover="tooltip(event, '<?php echo $show_invoice['invoice_id'] ?>')" onmouseout="tooltip(event, '<?php echo $show_invoice['invoice_id'] ?>')"><?php echo $show_payment['invoice_id'] ?></a><br />
@@ -108,10 +111,11 @@ $next_page = $total_records;
               </tr>
             </table></div></td>
           <td class="tablerowborder"><a href="mailto:<?php echo $show_employee['email_address'] ?>?subject=Payment: <?php echo $show_payment['payment_id'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a><br />
-            <span class="smalltext"><?php echo $show_payment['date_received'] ?></span></td>
+            <span class="smalltext"><?php echo $show_payment['date_created'] ?></span></td>
           <td class="tablerowborder"><a href="update_client.php?client_id=<?php echo $show_client['client_id'] ?>"><?php echo strtoupper($show_client['last_name']) ?>, <?php echo $show_client['first_name'] ?></a><br />
             <span class="smalltext"><?php echo $show_client['company_name'] ?></span></td>
-          <td class="tablerowborder"><?php echo $show_payment['reference'] ?></td>
+          <td class="tablerowborder"><?php echo $show_payment['reference'] ?><br />
+          <span class="smalltext"><?php echo $show_payment['date_received'] ?></span></td>
           <td class="tablerowborder"><span class="justred"><?php echo $show_company['currency_symbol'] ?><?php echo $show_payment['amount'] ?></span></td>
         </tr>
         <?php } ?>

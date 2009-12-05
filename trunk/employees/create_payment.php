@@ -4,14 +4,14 @@
 session_start();
 $page_access = 2;
 
-# Include session (security check):
-include("session_check.php");
+# include_once session (security check):
+include_once("session_check.php");
 
-# Include session check and database connection:
-include("../inc/dbconfig.php");
+# include_once session check and database connection:
+include_once("../inc/dbconfig.php");
 
-# Include security POST loop:
-include("../global/make_safe.php");
+# include_once security POST loop:
+include_once("../global/make_safe.php");
 
 $get_company = mysql_query("SELECT * FROM company");
 $show_company = mysql_fetch_array($get_company);
@@ -82,15 +82,15 @@ header("Location: e-mail_payment_received.php?payment_id=$payment_id");
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Refresh" content="<?php echo $show_company['session_timeout'] ?>;URL=../timeout.php" />
-<title><?php echo $show_company['company_name'] ?> - Create Payment</title>
+<title><?php echo $show_company['company_name'] ?> - Create Manual Payment</title>
 <link href="../billwerx.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../scripts/form_assist.js"></script>
 </head>
 <body onload="document.getElementById('amount').focus()" onunload="window.opener.location.reload()">
 <div id="smallwrap">
   <div id="header">
-    <h1><img src="../images/icons/payments.png" alt="Create Payment" width="16" height="16" /> Create Payment:</h1>
-    <p>Apply a payment to invoice #: <a href="../global/print_invoice.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>"><?php echo $show_invoice['invoice_id'] ?></a>.</p>
+    <h2>Create Payment:</h2>
+    <h3>Post or process a payment for for invoice #: <a href="../global/print_invoice.php?invoice_id=<?php echo $show_invoice['invoice_id'] ?>"><?php echo $show_invoice['invoice_id'] ?></a>.</h3>
   </div>
   <div id="content">
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data" name="create_payment" id="create_payment">
@@ -101,26 +101,28 @@ header("Location: e-mail_payment_received.php?payment_id=$payment_id");
             <?php while($show_payment_method = mysql_fetch_array($get_payment_methods)) { ?>
             <option value="<?php echo $show_payment_method['method_id'] ?>"><?php echo $show_payment_method['name'] ?> </option>
             <?php } ?>
-          </select> <a href="credit_cards.php?client_id=<?php echo $show_invoice['client_id'] ?>"><img src="../images/icons/information.png" alt="Client Details" width="16" height="16" class="iconspacer" /></a></td>
+          </select> <a href="credit_cards.php?client_id=<?php echo $show_invoice['client_id'] ?>"></a></td>
+          <td class="lastcell"><img src="../images/icons/credit_cards.png" alt="API Process" class="iconspacer" /> <a href="credit_cards.php?client_id=<?php echo $show_invoice['client_id'] ?>"><img src="../images/icons/information.png" alt="Client Details" width="16" height="16" class="iconspacer" /></a></td>
         </tr>
         <tr>
           <td class="firstcell">attachment:</td>
-          <td><input name="file" type="file" class="entrytext" id="file" /></td>
+          <td colspan="2"><input name="file" type="file" class="entrytext" id="file" /></td>
         </tr>
         <tr>
           <td class="firstcell">amount:</td>
-          <td><input name="amount" type="text" class="entrytext" id="amount" value="<?php echo $show_invoice['due'] ?>" /></td>
+          <td colspan="2"><input name="amount" type="text" class="entrytext" id="amount" value="<?php echo $show_invoice['due'] ?>" /></td>
         </tr>
         <tr>
           <td class="firstcell">reference:</td>
-          <td><input name="reference" type="text" class="entrytext" id="reference" /></td>
+          <td colspan="2"><input name="reference" type="text" class="entrytext" id="reference" /></td>
         </tr>
         <tr>
           <td class="firstcell">date received:</td>
-          <td><input name="date_received" type="text" class="entrytext" id="date_received" value="<?php echo date('Y-m-d') ?>" /></td>
+          <td colspan="2"><input name="date_received" type="text" class="entrytext" id="date_received" value="<?php echo date('Y-m-d') ?>" /></td>
         </tr>
+      </table>
+      <table class="fulltable">
         <tr>
-          <td class="firstcell">&nbsp;</td>
           <td><input name="create" type="submit" class="button" id="create" value="CREATE" />
             <input name="client_id" type="hidden" id="client_id" value="<?php echo $show_invoice['client_id'] ?>" />
             <input name="invoice_id" type="hidden" id="invoice_id" value="<?php echo $show_invoice['invoice_id'] ?>" /></td>

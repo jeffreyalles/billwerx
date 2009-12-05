@@ -76,11 +76,14 @@ header("Location: profile.php");
 <body>
 <div id="wrap">
   <div id="header">
-    <h1><img src="../images/icons/clients.png" alt="Update Client" width="16" height="16" /> Profile: <?php echo strtoupper($show_client['last_name']) ?>, <?php echo $show_client['first_name'] ?></h1>
-    <p>Record created <?php echo $show_client['created'] ?> by: <a href="mailto:<?php echo $show_employee['email_address'] ?>?subject=Client: <?php echo strtoupper($show_client['last_name']) ?>, <?php echo $show_client['first_name'] ?>"><?php echo strtoupper($show_employee['last_name']) ?>, <?php echo $show_employee['first_name'] ?></a>.</p>
-    <div id="navbar">
-      <?php include("navbar.php") ?>
-    </div>
+    <h1><?php echo $show_client['first_name'] ?> <?php echo $show_client['last_name'] ?></h1>
+    <h3>Record created <?php echo $show_client['created'] ?>.</h3>
+  </div>
+  <div id="logininfo">
+    <?php include_once("login_info.php") ?>
+  </div>
+  <div id="navbar">
+    <?php include_once("navbar.php") ?>
   </div>
   <div id="content">
     <form id="update_client" name="update_client" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
