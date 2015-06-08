@@ -1,0 +1,2 @@
+# Billwerx Description #
+Billwerx allows employees to create an invoice for a client. Once the invoice is generated the invoice can be sent to the client as a PDF attachment, viewed by the client in his or her control panel. Billwerx features and integrated servey syste, file and storage attachments, with a featre looking graphic user interface.
